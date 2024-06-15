@@ -1,0 +1,17 @@
+.square {
+    width: 100px;
+    height: 100px;
+    font-size: 50px;
+    text-align: center;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.row {
+    margin-bottom: -1px;
+}
+.x-color {
+    color: rgb(53, 145, 250);
+}
+.o-color {
+    color: red;
+}

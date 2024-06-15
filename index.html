@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Tic Tac Toe <span class="lead">(made by Nitin)</span></h1>
+        <div id="message" class="alert alert-primary text-center">Player 1's turn (X)</div>
+        <div id="board" class="row text-center m-3">
+            <div class="col-4 square" onclick="makeMove(0, 0)"></div>
+            <div class="col-4 square" onclick="makeMove(0, 1)"></div>
+            <div class="col-4 square" onclick="makeMove(0, 2)"></div>
+            <div class="col-4 square" onclick="makeMove(1, 0)"></div>
+            <div class="col-4 square" onclick="makeMove(1, 1)"></div>
+            <div class="col-4 square" onclick="makeMove(1, 2)"></div>
+            <div class="col-4 square" onclick="makeMove(2, 0)"></div>
+            <div class="col-4 square" onclick="makeMove(2, 1)"></div>
+            <div class="col-4 square" onclick="makeMove(2, 2)"></div>
+        </div>
+        <div class="text-center mt-3">
+            <button id="resetBtn" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
+            <br>
+            <a href="https://www.github.com/nitin-is-me/"> Link to my Github profile </a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
