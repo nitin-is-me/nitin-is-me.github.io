@@ -1,5 +1,6 @@
 # Tic-Tac-Toe
-I made this game using HTML, a little bit of CSS for custom designing, Bootstrap 4 and Javascript.
+I made this game using HTML, a little bit of CSS for custom designing, Bootstrap 4 and Javascript. <br>
+Here's the link to the game: <a href="https://nitin-is-me.github.io">Tic-Tac-Toe</a>
 
 ## Contact
 E-mail: nitinjha2609@gmail.com <br>
