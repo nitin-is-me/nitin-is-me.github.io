@@ -779,35 +779,65 @@ function initSkillBreakerGame() {
   let gameState = 'START'; // 'START', 'PLAYING', 'GAME_OVER', 'VICTORY'
   let particles = [];
 
-  // Paddle
-  const paddle = {
-    w: 115,
-    h: 12,
-    x: 0,
-    y: 388,
-    speed: 8,
-    dx: 0
-  };
+  // Paddle (dimensions computed in resizeCanvas)
+  const paddle = { w: 115, h: 12, x: 0, y: 0, speed: 8, dx: 0 };
 
   // Ball
-  const ball = {
-    x: 0,
-    y: 0,
-    r: 6.5,
-    dx: 3.5,
-    dy: -3.5,
-    speed: 4.2
-  };
+  const ball = { x: 0, y: 0, r: 6, dx: 3.5, dy: -3.5, speed: 4.2 };
 
-  // Bricks grid
-  const brickRows = 3;
-  const brickCols = 6;
-  const brickWidth = 100;
-  const brickHeight = 26;
-  const brickPadding = 10;
-  const brickOffsetTop = 40;
-  const brickOffsetLeft = 25;
+  // Bricks grid — col/row counts computed in resizeCanvas
+  let brickRows = 3;
+  let brickCols = 6;
+  let brickWidth = 100;
+  let brickHeight = 26;
+  let brickPadding = 10;
+  let brickOffsetTop = 40;
+  let brickOffsetLeft = 20;
   let bricks = [];
+
+  // Make canvas fill its CSS container width and adjust game layout
+  function resizeCanvas() {
+    // Determine available viewport width
+    const vw = Math.min(window.innerWidth || 360, document.documentElement.clientWidth || 360);
+    // Modal padding: p-2 (8px each side = 16px) on mobile (< 640px), p-6 (24px each side = 48px) on sm+
+    const modalPad = vw >= 640 ? 48 : 16;
+    // Canvas container padding: p-2 (8px each side = 16px) on mobile, p-4 (16px each side = 32px) on sm+
+    const containerPad = vw >= 640 ? 32 : 16;
+    const borderOffset = 4;
+    const available = vw - modalPad - containerPad - borderOffset;
+    const cw = Math.min(700, Math.max(260, Math.floor(available)));
+
+    const isMobile = cw < 540;
+    // On mobile (< 540px): 3 columns x 6 rows = 18 blocks (ALL 18 skills present!)
+    // On desktop (>= 540px): 6 columns x 3 rows = 18 blocks (ALL 18 skills present!)
+    brickCols = isMobile ? 3 : 6;
+    brickRows = isMobile ? 6 : 3;
+
+    // Height calculation:
+    // On mobile with 6 rows of blocks, increase height (~380-400px) so all 18 blocks fit with plenty of ball play space!
+    const ch = isMobile ? Math.min(420, Math.round(cw * 1.08)) : Math.round(cw * (420 / 700));
+    canvas.width = cw;
+    canvas.height = ch;
+    canvas.style.width = cw + 'px';
+    canvas.style.height = ch + 'px';
+    canvas.style.maxWidth = '100%';
+
+    // Brick sizing: fill width evenly with clean padding
+    brickPadding = isMobile ? 6 : Math.max(6, Math.round(cw * 0.014));
+    brickOffsetLeft = isMobile ? 10 : Math.max(10, Math.round(cw * 0.028));
+    brickOffsetTop = isMobile ? 16 : Math.round(ch * 0.085);
+    brickWidth = Math.floor((cw - brickOffsetLeft * 2 - brickPadding * (brickCols - 1)) / brickCols);
+    brickHeight = isMobile ? 22 : Math.max(22, Math.round(ch * 0.067));
+
+    // Paddle: 28% width on mobile for smooth touch, 22% on desktop
+    paddle.w = Math.round(cw * (isMobile ? 0.28 : 0.22));
+    paddle.h = 12;
+    paddle.y = ch - (isMobile ? 22 : Math.round(ch * 0.085));
+    paddle.speed = Math.max(6, Math.round(cw * 0.015));
+
+    // Ball radius
+    ball.r = isMobile ? 5.5 : Math.max(5, Math.round(cw * 0.01));
+  }
 
   function initBricks() {
     bricks = [];
@@ -838,8 +868,8 @@ function initSkillBreakerGame() {
     ball.x = canvas.width / 2;
     ball.y = paddle.y - ball.r - 2;
     const dir = Math.random() > 0.5 ? 1 : -1;
-    ball.dx = (3 + Math.random() * 0.8) * dir;
-    ball.dy = -3.8;
+    ball.dx = (canvas.width < 400 ? 2.5 : 3) * dir;
+    ball.dy = canvas.width < 400 ? -2.8 : -3.5;
   }
 
   function resetGame() {
@@ -848,6 +878,7 @@ function initSkillBreakerGame() {
     particles = [];
     gameState = 'START';
     updateHUD();
+    resizeCanvas();
     initBricks();
     resetBallAndPaddle();
   }
@@ -939,6 +970,20 @@ function initSkillBreakerGame() {
     }
   }, { passive: false });
 
+  canvas.addEventListener('touchstart', (e) => {
+    if (gameState === 'START') {
+      gameState = 'PLAYING';
+    } else if (gameState === 'GAME_OVER' || gameState === 'VICTORY') {
+      resetGame();
+      gameState = 'PLAYING';
+    } else if (e.touches.length > 0) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const relativeX = (e.touches[0].clientX - rect.left) * scaleX;
+      paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, relativeX - paddle.w / 2));
+    }
+  }, { passive: true });
+
   canvas.addEventListener('click', () => {
     if (gameState === 'START') {
       gameState = 'PLAYING';
@@ -1017,7 +1062,6 @@ function initSkillBreakerGame() {
   }
 
   function drawBricks() {
-    ctx.font = 'bold 10px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -1036,9 +1080,11 @@ function initSkillBreakerGame() {
           ctx.fill();
           ctx.stroke();
 
-          // Text label
+          // Text label - scaled cleanly to brick width
           ctx.shadowBlur = 0;
           ctx.fillStyle = b.palette.text;
+          const fontSize = Math.min(11, Math.max(8, Math.floor(b.w / 9.5)));
+          ctx.font = `bold ${fontSize}px "JetBrains Mono", monospace`;
           ctx.fillText(b.skill, b.x + b.w / 2, b.y + b.h / 2);
           ctx.restore();
         }
@@ -1071,59 +1117,60 @@ function initSkillBreakerGame() {
   }
 
   function drawOverlays() {
+    const sm = canvas.width < 400; // small screen flag
     if (gameState === 'START') {
       ctx.save();
       ctx.fillStyle = 'rgba(7, 10, 19, 0.75)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.font = 'bold 20px "Outfit", sans-serif';
+      ctx.font = `bold ${sm ? 14 : 20}px "Outfit", sans-serif`;
       ctx.fillStyle = '#38bdf8';
       ctx.textAlign = 'center';
-      ctx.fillText('BREAK NITIN\'S SKILL ARSENAL', canvas.width / 2, canvas.height / 2 - 20);
+      ctx.fillText('BREAK NITIN\'S SKILL ARSENAL', canvas.width / 2, canvas.height / 2 - (sm ? 16 : 20));
 
-      ctx.font = '13px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 9 : 13}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#cbd5e1';
-      ctx.fillText('CLICK SCREEN or PRESS SPACE TO LAUNCH BALL', canvas.width / 2, canvas.height / 2 + 15);
+      ctx.fillText(sm ? 'TAP or SPACE to launch ball' : 'CLICK SCREEN or PRESS SPACE TO LAUNCH BALL', canvas.width / 2, canvas.height / 2 + (sm ? 10 : 15));
 
-      ctx.font = '11px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 8 : 11}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#94a3b8';
-      ctx.fillText('Move paddle using Mouse or [← / →] Arrow Keys', canvas.width / 2, canvas.height / 2 + 40);
+      ctx.fillText(sm ? 'Slide finger to steer' : 'Move paddle using Mouse or [← / →] Arrow Keys', canvas.width / 2, canvas.height / 2 + (sm ? 28 : 40));
       ctx.restore();
     } else if (gameState === 'GAME_OVER') {
       ctx.save();
       ctx.fillStyle = 'rgba(5, 7, 12, 0.88)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.font = 'bold 28px "Outfit", sans-serif';
+      ctx.font = `bold ${sm ? 20 : 28}px "Outfit", sans-serif`;
       ctx.fillStyle = '#f43f5e';
       ctx.textAlign = 'center';
-      ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 25);
+      ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - (sm ? 18 : 25));
 
-      ctx.font = '14px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 10 : 14}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 10);
+      ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + (sm ? 8 : 10));
 
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 8 : 12}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#38bdf8';
-      ctx.fillText('CLICK or PRESS [R] TO REPLAY • [ESC] TO EXIT', canvas.width / 2, canvas.height / 2 + 45);
+      ctx.fillText(sm ? 'TAP to replay • ESC to exit' : 'CLICK or PRESS [R] TO REPLAY • [ESC] TO EXIT', canvas.width / 2, canvas.height / 2 + (sm ? 28 : 45));
       ctx.restore();
     } else if (gameState === 'VICTORY') {
       ctx.save();
       ctx.fillStyle = 'rgba(5, 7, 12, 0.88)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.font = 'bold 28px "Outfit", sans-serif';
+      ctx.font = `bold ${sm ? 18 : 28}px "Outfit", sans-serif`;
       ctx.fillStyle = '#10b981';
       ctx.textAlign = 'center';
-      ctx.fillText('🎉 ALL SKILLS MASTERED!', canvas.width / 2, canvas.height / 2 - 25);
+      ctx.fillText('🎉 ALL SKILLS MASTERED!', canvas.width / 2, canvas.height / 2 - (sm ? 18 : 25));
 
-      ctx.font = '14px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 10 : 14}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(`Mastery Score: ${score}`, canvas.width / 2, canvas.height / 2 + 10);
+      ctx.fillText(`Mastery Score: ${score}`, canvas.width / 2, canvas.height / 2 + (sm ? 8 : 10));
 
-      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.font = `${sm ? 8 : 12}px "JetBrains Mono", monospace`;
       ctx.fillStyle = '#38bdf8';
-      ctx.fillText('PRESS [R] TO REPLAY • [ESC] TO EXIT', canvas.width / 2, canvas.height / 2 + 45);
+      ctx.fillText(sm ? 'TAP to replay • ESC to exit' : 'PRESS [R] TO REPLAY • [ESC] TO EXIT', canvas.width / 2, canvas.height / 2 + (sm ? 28 : 45));
       ctx.restore();
     }
   }
@@ -1227,6 +1274,14 @@ function initSkillBreakerGame() {
   if (closeBtn) closeBtn.addEventListener('click', closeArcade);
   if (exitBtn) exitBtn.addEventListener('click', closeArcade);
   if (restartBtn) restartBtn.addEventListener('click', () => { resetGame(); gameState = 'PLAYING'; });
+
+  window.addEventListener('resize', () => {
+    if (!modal.classList.contains('hidden')) {
+      resizeCanvas();
+      initBricks();
+      resetBallAndPaddle();
+    }
+  });
 }
 
 /* ==========================================================================

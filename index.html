@@ -61,20 +61,22 @@
   class="bg-[#07090e] text-slate-200 antialiased selection:bg-indigo-600 selection:text-white relative min-h-screen">
 
   <!-- Background decorative glows -->
-  <div class="glow-orb w-96 h-96 bg-indigo-600/15 top-10 left-1/4"></div>
-  <div class="glow-orb w-[30rem] h-[30rem] bg-cyan-600/10 top-96 right-10"></div>
-  <div class="glow-orb w-[28rem] h-[28rem] bg-purple-600/10 bottom-40 left-10"></div>
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="glow-orb w-72 sm:w-96 h-72 sm:h-96 bg-indigo-600/15 top-10 left-1/4"></div>
+    <div class="glow-orb w-80 sm:w-[30rem] h-80 sm:h-[30rem] bg-cyan-600/10 top-96 right-10"></div>
+    <div class="glow-orb w-72 sm:w-[28rem] h-72 sm:h-[28rem] bg-purple-600/10 bottom-40 left-10"></div>
+  </div>
 
   <!-- ==========================================================================
        NAVIGATION BAR
        ========================================================================== -->
   <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2 overflow-hidden">
 
       <!-- Brand Moniker -->
-      <a href="#hero" class="flex items-center gap-3 group">
+      <a href="#hero" class="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
         <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 p-0.5 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          class="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 p-0.5 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
           <div
             class="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center font-heading font-extrabold text-lg text-white">
             <span class="text-cyan-400">&lt;</span>N<span class="text-indigo-400">/&gt;</span>
@@ -82,10 +84,10 @@
         </div>
         <div class="flex flex-col">
           <span
-            class="font-heading font-bold text-lg text-white tracking-tight group-hover:text-indigo-300 transition-colors">
+            class="font-heading font-bold text-sm sm:text-lg text-white tracking-tight group-hover:text-indigo-300 transition-colors whitespace-nowrap">
             Nitin Kumar Jha
           </span>
-          <span class="text-[11px] font-mono text-cyan-400 -mt-1 tracking-wider">
+          <span class="text-[10px] sm:text-[11px] font-mono text-cyan-400 -mt-0.5 sm:-mt-1 tracking-wider whitespace-nowrap">
             SOFTWARE ENGINEER
           </span>
         </div>
@@ -120,7 +122,7 @@
 
       <!-- Mobile Hamburger Button -->
       <button id="mobileMenuBtn" aria-label="Toggle Navigation Menu"
-        class="md:hidden p-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 focus:outline-none">
+        class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 focus:outline-none flex-shrink-0">
         <i class="fa-solid fa-bars-staggered text-xl"></i>
       </button>
     </div>
@@ -1387,22 +1389,22 @@
   <!-- ==========================================================================
        SKILL BREAKER ARCADE MODAL
        ========================================================================== -->
-  <div id="arcadeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-hidden">
+  <div id="arcadeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 overflow-hidden max-w-[100vw]">
     <div class="modal-backdrop fixed inset-0 bg-black/85 backdrop-blur-md"></div>
     <div
-      class="relative w-full max-w-3xl rounded-2xl overflow-hidden z-10 border border-slate-700/80 bg-[#070a12] shadow-2xl flex flex-col items-center">
+      class="relative w-full max-w-[calc(100vw-1rem)] sm:max-w-3xl rounded-2xl overflow-hidden z-10 border border-slate-700/80 bg-[#070a12] shadow-2xl flex flex-col items-center min-w-0 mx-auto">
 
       <!-- Titlebar -->
-      <div class="w-full flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-[#0d121f]">
-        <div class="flex items-center gap-3">
-          <span class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></span>
-          <span class="text-xs sm:text-sm font-mono font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-gamepad text-cyan-400"></i>
-            NITIN'S SKILL BREAKER v1.0
+      <div class="w-full flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3.5 border-b border-slate-800 bg-[#0d121f] min-w-0">
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500 animate-pulse flex-shrink-0"></span>
+          <span class="text-xs sm:text-sm font-mono font-bold text-white flex items-center gap-1.5 sm:gap-2 truncate">
+            <i class="fa-solid fa-gamepad text-cyan-400 flex-shrink-0"></i>
+            <span class="truncate">SKILL BREAKER</span>
           </span>
         </div>
-        <div class="flex items-center gap-4 text-xs font-mono">
-          <span class="text-slate-400 hidden sm:inline">Controls: [←/→] or Mouse / Touch</span>
+        <div class="flex items-center gap-2 sm:gap-4 text-xs font-mono flex-shrink-0">
+          <span class="text-slate-400 hidden sm:inline">Controls: [←/→] or Touch</span>
           <button id="closeArcadeBtn"
             class="text-slate-400 hover:text-white text-base px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
             title="Close Game">
@@ -1413,14 +1415,14 @@
 
       <!-- Score & Lives HUD -->
       <div
-        class="w-full px-5 py-2.5 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-xs sm:text-sm font-mono">
-        <div class="flex items-center gap-2 text-indigo-300">
+        class="w-full px-3 sm:px-5 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-between text-xs sm:text-sm font-mono min-w-0">
+        <div class="flex items-center gap-1.5 sm:gap-2 text-indigo-300 flex-shrink-0">
           <span>SCORE:</span>
-          <span id="gameScore" class="font-bold text-white text-base">0</span>
+          <span id="gameScore" class="font-bold text-white text-sm sm:text-base">0</span>
         </div>
-        <div class="flex items-center gap-2 text-rose-400">
+        <div class="flex items-center gap-1.5 sm:gap-2 text-rose-400 flex-shrink-0">
           <span>LIVES:</span>
-          <span id="gameLives" class="tracking-widest text-base">❤️❤️❤️</span>
+          <span id="gameLives" class="tracking-widest text-sm sm:text-base">❤️❤️❤️</span>
         </div>
         <div class="text-cyan-400 text-xs hidden sm:block">
           <span id="gameBlocksLeft">Skills Remaining: 18</span>
@@ -1428,23 +1430,27 @@
       </div>
 
       <!-- Canvas Container -->
-      <div class="relative w-full flex items-center justify-center p-2 sm:p-4 bg-[#05070c]">
-        <canvas id="arcadeCanvas" width="700" height="420"
-          class="w-full max-w-[700px] h-auto rounded-xl border border-slate-800/90 shadow-inner bg-[#070a13] cursor-none"></canvas>
+      <div class="relative w-full flex items-center justify-center p-2 sm:p-4 bg-[#05070c] min-w-0 overflow-hidden">
+        <canvas id="arcadeCanvas" width="1" height="1"
+          class="block rounded-xl border border-slate-800/90 shadow-inner bg-[#070a13] cursor-none max-w-full"></canvas>
       </div>
 
       <!-- Bottom Controls / Hint Bar -->
       <div
-        class="w-full px-5 py-2.5 bg-[#0d121f] border-t border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-        <span class="text-slate-500 text-[11px] truncate mr-2">Break all tech skill blocks to win! Move mouse or arrows
-          to steer paddle.</span>
-        <div class="flex items-center gap-2 flex-shrink-0">
+        class="w-full px-3 sm:px-5 py-2 sm:py-2.5 bg-[#0d121f] border-t border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400 min-w-0 gap-2">
+        <span class="text-slate-500 text-[10px] sm:text-[11px] truncate min-w-0 flex-1">
+          <span class="hidden sm:inline">Break all tech skill blocks to win! Move mouse or arrows to steer.</span>
+          <span class="sm:hidden">Drag or tap paddle to steer!</span>
+        </span>
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <button id="restartGameBtn"
-            class="px-3 py-1 rounded bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white transition-colors">Restart
-            (R)</button>
+            class="px-2.5 sm:px-3 py-1 rounded bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white transition-colors text-[11px] sm:text-xs">
+            Restart (R)
+          </button>
           <button id="exitGameBtn"
-            class="px-3 py-1 rounded bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition-colors">Exit
-            (Esc)</button>
+            class="px-2.5 sm:px-3 py-1 rounded bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition-colors text-[11px] sm:text-xs">
+            Exit (Esc)
+          </button>
         </div>
       </div>
 
