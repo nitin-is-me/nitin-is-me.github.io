@@ -1318,9 +1318,9 @@ function initLofiPlayer() {
       src: 'assets/audio/brushstrokes-and-rain.mp3'
     },
     {
-      title: 'Sidewalk slow',
+      title: 'Sidewalk slow jam',
       artist: 'openlofi • Github',
-      src: 'assets/audio/sidewalk-slow.mp3'
+      src: 'assets/audio/sidewalk-slow-jam.mp3'
     },
     {
       title: 'Terminal rain',
@@ -1328,9 +1328,9 @@ function initLofiPlayer() {
       src: 'assets/audio/terminal-rain.mp3'
     },
     {
-      title: 'Winter turnable',
+      title: 'Winter turntable',
       artist: 'openlofi • Github',
-      src: 'assets/audio/winter-turnable.mp3'
+      src: 'assets/audio/winter-turntable.mp3'
     }
   ];
 
